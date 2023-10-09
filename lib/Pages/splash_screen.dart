@@ -39,14 +39,14 @@ class SplashScreen extends StatelessWidget {
                     'assets/images/Logo.svg',
                     height: screenHeight * 0.2,
                   ),
-                  SizedBox(height: screenHeight * 0.03),
                   Text(
                     'Brand',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: screenHeight * 0.04,
+                      fontSize: 46,
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.none,
+                      fontFamily: 'Barlow'
                     ),
                   ),
                 ],
