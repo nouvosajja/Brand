@@ -1,4 +1,6 @@
+import 'package:brand/Login/screen.dart';
 import 'package:brand/Pages/Profile/screen.dart';
+import 'package:brand/Pages/forgetPass/forgetPass.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
+      home: forgetPass(),
     );
   }
 }
