@@ -63,6 +63,10 @@ flutter:
     - assets/images/BG1.svg
     - assets/images/Logo.svg
     - assets/images/BG2.svg
+    - assets/images/google.png
+    - assets/images/Lock.svg
+    - assets/images/Mail.svg
+
 
   #   - images/a_dot_ham.jpeg
 
