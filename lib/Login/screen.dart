@@ -11,6 +11,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool obscureText = true;
+  final GlobalKey<FormFieldState<String>> _passwordFieldKey =
+      GlobalKey<FormFieldState<String>>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: () {
@@ -43,14 +47,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     children: [
                       SizedBox(
-                        height: screenHeight * 0.13,
+                        height: screenHeight * 0.1,
                       ),
                       Center(
                         child: Text(
                           "Welcome Back",
                           style: TextStyle(
                             fontFamily: 'Barlow',
-                            fontSize: 32,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF506EAF),
                           ),
@@ -63,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Container(
                             width: screenWidth * 0.85,
-                            height: screenHeight * 0.59,
+                            height: screenHeight * 0.6,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
@@ -117,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Positioned(
                             top: screenHeight *
-                                0.3, // Mengatur posisi teks di bawah SVG
+                                0.28, // Mengatur posisi teks di bawah SVG
                             left: 0,
                             right: 0,
                             child: Text(
@@ -131,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Positioned(
                             top: screenHeight *
-                                0.33, // Mengatur posisi TextField
+                                0.31, // Mengatur posisi TextField
                             left: 0,
                             right: 0,
                             child: Container(
@@ -144,9 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.email, // Ikon email
-                                    color: Colors.black,
+                                  SvgPicture.asset(
+                                    'assets/images/Mail.svg',
+                                    width: 15,
+                                    height: 15,
                                   ),
                                   SizedBox(width: 12),
                                   Expanded(
@@ -166,34 +171,52 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Positioned(
-                            top: screenHeight *
-                                0.405, // Mengatur posisi TextField
+                            top: screenHeight * 0.386,
                             left: 0,
                             right: 0,
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 24),
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(
-                                    0.3), // Latar belakang warna abu-abu blur
+                                color: Colors.white.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.lock_outline_rounded, // Ikon email
-                                    color: Colors.black,
+                                  SvgPicture.asset(
+                                    'assets/images/Lock.svg',
+                                    width: 20,
+                                    height: 20,
                                   ),
                                   SizedBox(width: 12),
                                   Expanded(
                                     child: TextField(
+                                      key: _passwordFieldKey,
+                                      obscureText: obscureText,
                                       decoration: InputDecoration(
-                                        hintText: "Email",
+                                        hintText: "Password",
                                         hintStyle: TextStyle(
                                           color: Colors.black.withOpacity(0.5),
                                           fontSize: 14,
                                         ),
                                         border: InputBorder.none,
+                                        suffixIcon: GestureDetector(
+                                          onTap: () {
+                                            // Tambahkan logika untuk mengubah obscureText
+                                            setState(() {
+                                              obscureText = !obscureText;
+                                            });
+                                            _passwordFieldKey.currentState
+                                                ?.didChange('');
+                                          },
+                                          child: Icon(
+                                            obscureText
+                                                ? Icons.visibility_off_rounded
+                                                : Icons
+                                                    .visibility_rounded, // Ganti ikon mata terbuka/tutup
+                                            color: Colors.black,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -201,10 +224,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                          // make button with positioned
                           Positioned(
-                            top: screenHeight *
-                                0.5, // Mengatur posisi tombol login
+                            top: screenHeight * 0.46,
                             left: 0,
                             right: 0,
                             child: Container(
@@ -215,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   colors: [
                                     Color(0xFF4E6EAF),
                                     Color(0xFFA993D3)
-                                  ], // Ubah warna gradient sesuai preferensi Anda
+                                  ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                 ),
@@ -229,17 +250,129 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.white,
                                     fontSize: 20,
                                     fontFamily: 'HelveticaNeue',
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
                           ),
+                          Positioned(
+                            top: screenHeight * 0.52,
+                            left: 0,
+                            right: 0,
+                            child: TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Forgotten your password?",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontFamily: 'Barlow',
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
-                      )
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.03,
+                      ),
+                      // make line and between the line text or
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: screenWidth * 0.4,
+                            height: 1,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Or",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontFamily: 'Barlow',
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: screenWidth * 0.4,
+                            height: 1,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.02,
+                      ),
+                      Container(
+                        width: screenWidth * 0.5,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/google.png',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "Login with Google",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: 'Barlow',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.04,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an account?",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontFamily: 'Barlow',
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              "Register Here",
+                              style: TextStyle(
+                                color: Color(0xFFBC53FF),
+                                fontSize: 14,
+                                fontFamily: 'Barlow',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
