@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-
+import 'package:brand/Pages/forgetPass/receiveLink.dart';
 import 'package:flutter/material.dart';
 
 class forgetPass extends StatefulWidget {
@@ -44,8 +43,7 @@ class _forgetPassState extends State<forgetPass> {
               ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      top: 120),
+                  padding: EdgeInsets.only(top: 120),
                   child: Column(
                     children: [
                       Container(
@@ -118,7 +116,14 @@ class _forgetPassState extends State<forgetPass> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              recLink()), // Navigasi ke halaman recLink
+                    );
+                  },
                   child: Text(
                     'SEND',
                     style: TextStyle(
