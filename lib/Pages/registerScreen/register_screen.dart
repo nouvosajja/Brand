@@ -3,8 +3,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui';
 import 'package:gap/gap.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +189,8 @@ class RegisterScreen extends StatelessWidget {
                                     SizedBox(width: 12),
                                     Expanded(
                                       child: TextField(
+                                        obscureText:
+                                            !_isPasswordVisible, // Menyembunyikan atau menampilkan teks input
                                         decoration: InputDecoration(
                                           hintText: "Password",
                                           hintStyle: TextStyle(
@@ -190,6 +199,20 @@ class RegisterScreen extends StatelessWidget {
                                             fontSize: 14,
                                           ),
                                           border: InputBorder.none,
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              _isPasswordVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                _isPasswordVisible =
+                                                    !_isPasswordVisible;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -222,6 +245,8 @@ class RegisterScreen extends StatelessWidget {
                                     SizedBox(width: 12),
                                     Expanded(
                                       child: TextField(
+                                        obscureText:
+                                            !_isPasswordVisible, // Menyembunyikan atau menampilkan teks input
                                         decoration: InputDecoration(
                                           hintText: "Repeat Password",
                                           hintStyle: TextStyle(
@@ -230,6 +255,20 @@ class RegisterScreen extends StatelessWidget {
                                             fontSize: 14,
                                           ),
                                           border: InputBorder.none,
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              _isPasswordVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                _isPasswordVisible =
+                                                    !_isPasswordVisible;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
