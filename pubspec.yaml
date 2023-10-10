@@ -36,6 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.7
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,7 @@ flutter:
     - assets/images/BG1.svg
     - assets/images/Logo.svg
     - assets/images/BG2.svg
+    - assets/images/google.png
 
   #   - images/a_dot_ham.jpeg
 
@@ -77,15 +79,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
+  fonts:
+    - family: Barlow
+      fonts:
+        - asset: assets/fonts/Barlow/Barlow-Regular.ttf
+        - asset: assets/fonts/Barlow/Barlow-Bold.ttf
+          weight: 700
+    - family: HelveticaNeue
+      fonts:
+        - asset: assets/fonts/HelveticaNeue/HelveticaNeue-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
