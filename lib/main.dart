@@ -1,6 +1,4 @@
-import 'package:brand/Login/screen.dart';
-import 'package:brand/Pages/registerScreen/register_screen.dart';
-import 'package:brand/Pages/splash_screen.dart';
+import 'package:brand/Pages/Profile/screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterScreen(),
+      home: ProfileScreen(),
     );
   }
 }
