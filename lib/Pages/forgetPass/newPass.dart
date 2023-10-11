@@ -198,7 +198,7 @@ class _newPassState extends State<newPass> {
                   child: TextButton(
                     onPressed: () {},
                     child: Text(
-                      'SEND',
+                      'SAVE',
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: 'Helvetica Neue',
