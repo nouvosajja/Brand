@@ -349,26 +349,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(
                           height: 15,
                         ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     // SvgPicture.asset(
-                        //     //   'assets/images/Google.svg',
-                        //     //   height: 20,
-                        //     // ),
-                        //     // SizedBox(
-                        //     //     width: 5), // Berikan jarak antara ikon dan teks
-                        //     // Text(
-                        //     //   "Register with Google",
-                        //     //   style: TextStyle(
-                        //     //     fontSize:
-                        //     //         14, // Sesuaikan ukuran teks yang diinginkan
-                        //     //     fontWeight: FontWeight.bold,
-                        //     //   ),
-                        //     // ),
-
-                        //   ],
-                        // ),
                         Container(
                           width: screenWidth * 0.6,
                           padding: EdgeInsets.symmetric(horizontal: 16),
