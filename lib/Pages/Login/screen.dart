@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:brand/Pages/registerScreen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -14,6 +15,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscureText = true;
   final GlobalKey<FormFieldState<String>> _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
+
+  void _navigateToRegisterScreen() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => RegisterScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: screenHeight * 0.02,
                       ),
                       Container(
-                        width: screenWidth * 0.5,
+                        width: screenWidth * 0.55,
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.6),
@@ -342,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: screenHeight * 0.04,
+                        height: screenHeight * 0.01,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -356,7 +363,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _navigateToRegisterScreen();
+                            },
                             child: Text(
                               "Register Here",
                               style: TextStyle(
