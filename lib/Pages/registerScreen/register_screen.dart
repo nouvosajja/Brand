@@ -323,8 +323,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ],
                           ),
+
                           SizedBox(
                             height: 15,
+
                           ),
                           Positioned(
                             top: screenHeight * 0.67,
