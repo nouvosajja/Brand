@@ -67,6 +67,8 @@ flutter:
     - assets/images/google.png
     - assets/images/Lock.svg
     - assets/images/Mail.svg
+    - assets/images/BG3.png
+    - assets/images/PP.png
 
 
   #   - images/a_dot_ham.jpeg
@@ -86,6 +88,8 @@ flutter:
     - family: Barlow
       fonts:
         - asset: assets/fonts/Barlow/Barlow-Regular.ttf
+        - asset: assets/fonts/Barlow/Barlow-Medium.ttf
+          weight: 500
         - asset: assets/fonts/Barlow/Barlow-Bold.ttf
           weight: 700
     - family: HelveticaNeue
