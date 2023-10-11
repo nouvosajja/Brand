@@ -1,4 +1,3 @@
-import 'package:brand/Login/screen.dart';
 import 'package:brand/Pages/registerScreen/register_screen.dart';
 import 'package:brand/Pages/splash_screen.dart';
 import 'package:flutter/material.dart';
