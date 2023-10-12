@@ -1,10 +1,27 @@
 import 'dart:ui';
-
+import 'package:brand/Pages/Login/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigatetoregister();
+  }
+
+  _navigatetoregister() async {
+    await Future.delayed(Duration(milliseconds: 1500), () {});
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +59,11 @@ class SplashScreen extends StatelessWidget {
                   Text(
                     'Brand',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 46,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                      fontFamily: 'Barlow'
-                    ),
+                        color: Colors.white,
+                        fontSize: 46,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                        fontFamily: 'Barlow'),
                   ),
                 ],
               ),
