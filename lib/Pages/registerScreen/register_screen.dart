@@ -97,7 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Positioned(
                                 top: screenHeight *
-                                    0.02, // Mengatur posisi logo ke tengah secara vertikal
+                                    0.02, 
                                 left: 0,
                                 right: 0,
                                 child: Align(
@@ -112,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Positioned(
                                 top: screenHeight *
-                                    0.159, // Mengatur posisi teks di bawah SVG
+                                    0.159, 
                                 left: 0,
                                 right: 0,
                                 child: Text(
@@ -128,21 +128,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Positioned(
                                 top: screenHeight *
-                                    0.3, // Mengatur posisi teks di bawah SVG
+                                    0.3, 
                                 left: 0,
                                 right: 0,
                                 child: Text(
                                   "Register to use this amazing app",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.black, // Warna teks
-                                    fontSize: 14, // Ukuran teks
+                                    color: Colors.black, 
+                                    fontSize: 14, 
                                   ),
                                 ),
                               ),
                               Positioned(
                                 top: screenHeight *
-                                    0.33, // Mengatur posisi TextField
+                                    0.33, 
                                 left: 0,
                                 right: 0,
                                 child: Container(
@@ -150,13 +150,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(
-                                        0.3), // Latar belakang warna abu-abu blur
+                                        0.3), 
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
                                     children: [
                                       Icon(
-                                        Icons.email, // Ikon email
+                                        Icons.email, 
                                         color: Colors.black,
                                       ),
                                       SizedBox(width: 12),
@@ -180,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Gap(10),
                               Positioned(
                                 top: screenHeight *
-                                    0.405, // Mengatur posisi TextField
+                                    0.405, 
                                 left: 0,
                                 right: 0,
                                 child: Container(
@@ -188,21 +188,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(
-                                        0.3), // Latar belakang warna abu-abu blur
+                                        0.3), 
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
                                     children: [
                                       Icon(
                                         Icons
-                                            .lock_outline_rounded, // Ikon email
+                                            .lock_outline_rounded, 
                                         color: Colors.black,
                                       ),
                                       SizedBox(width: 12),
                                       Expanded(
                                         child: TextField(
                                           obscureText:
-                                              !_isPasswordVisible, // Menyembunyikan atau menampilkan teks input
+                                              !_isPasswordVisible, 
                                           decoration: InputDecoration(
                                             hintText: "Password",
                                             hintStyle: TextStyle(
@@ -237,7 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Positioned(
                                 top: screenHeight *
-                                    0.480, // Mengatur posisi TextField
+                                    0.480, 
                                 left: 0,
                                 right: 0,
                                 child: Container(
@@ -245,21 +245,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(
-                                        0.3), // Latar belakang warna abu-abu blur
+                                        0.3), 
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
                                     children: [
                                       Icon(
                                         Icons
-                                            .lock_outline_rounded, // Ikon email
+                                            .lock_outline_rounded, 
                                         color: Colors.black,
                                       ),
                                       SizedBox(width: 12),
                                       Expanded(
                                         child: TextField(
                                           obscureText:
-                                              !_isPasswordVisible, // Menyembunyikan atau menampilkan teks input
+                                              !_isPasswordVisible, 
                                           decoration: InputDecoration(
                                             hintText: "Repeat Password",
                                             hintStyle: TextStyle(
@@ -302,7 +302,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       colors: [
                                         Color(0xFF4E6EAF),
                                         Color(0xFFA993D3)
-                                      ], // Ubah warna gradient sesuai preferensi Anda
+                                      ], 
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
                                     ),
@@ -365,26 +365,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(
                             height: 15,
                           ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     // SvgPicture.asset(
-                          //     //   'assets/images/Google.svg',
-                          //     //   height: 20,
-                          //     // ),
-                          //     // SizedBox(
-                          //     //     width: 5), // Berikan jarak antara ikon dan teks
-                          //     // Text(
-                          //     //   "Register with Google",
-                          //     //   style: TextStyle(
-                          //     //     fontSize:
-                          //     //         14, // Sesuaikan ukuran teks yang diinginkan
-                          //     //     fontWeight: FontWeight.bold,
-                          //     //   ),
-                          //     // ),
-
-                          //   ],
-                          // ),
                           Container(
                             width: screenWidth * 0.625,
                             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -410,19 +390,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    'assets/images/google.png', // Ganti dengan path gambar Google Anda
-                                    height: 20, // Sesuaikan tinggi gambar
-                                    width: 20, // Sesuaikan lebar gambar
+                                    'assets/images/google.png', 
+                                    height: 20, 
+                                    width: 20, 
                                   ),
                                   SizedBox(
                                       width:
-                                          10), // Berikan jarak antara ikon dan teks
+                                          10), 
                                   Text(
                                     'Register with Google',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize:
-                                            14, // Sesuaikan ukuran teks yang diinginkan
+                                            14, 
                                         fontFamily: 'Barlow'),
                                   ),
                                 ],

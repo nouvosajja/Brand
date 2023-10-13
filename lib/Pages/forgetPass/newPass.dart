@@ -84,11 +84,11 @@ class _newPassState extends State<newPass> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(
-                          0.3), // Latar belakang warna abu-abu blur
+                          0.3), 
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.grey, // Warna border
-                        width: 1.0, // Lebar border
+                        color: Colors.grey, 
+                        width: 1.0, 
                       ),
                     ),
                     child: Row(
@@ -102,7 +102,7 @@ class _newPassState extends State<newPass> {
                         Expanded(
                           child: TextField(
                             obscureText:
-                                !_isPasswordVisible, // Menyembunyikan atau menampilkan teks input
+                                !_isPasswordVisible, 
                             decoration: InputDecoration(
                               hintText: "Password",
                               hintStyle: TextStyle(
@@ -139,11 +139,11 @@ class _newPassState extends State<newPass> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(
-                          0.3), // Latar belakang warna abu-abu blur
+                          0.3), 
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.grey, // Warna border
-                        width: 1.0, // Lebar border
+                        color: Colors.grey, 
+                        width: 1.0, 
                       ),
                     ),
                     child: Row(
@@ -157,7 +157,7 @@ class _newPassState extends State<newPass> {
                         Expanded(
                           child: TextField(
                             obscureText:
-                                !_isPasswordVisible, // Menyembunyikan atau menampilkan teks input
+                                !_isPasswordVisible, 
                             decoration: InputDecoration(
                               hintText: "Repeat Password",
                               hintStyle: TextStyle(

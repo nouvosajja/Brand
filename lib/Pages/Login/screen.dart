@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Positioned(
                             top: screenHeight *
-                                0.02, // Mengatur posisi logo ke tengah secara vertikal
+                                0.02, 
                             left: 0,
                             right: 0,
                             child: Align(
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Positioned(
                             top: screenHeight *
-                                0.159, // Mengatur posisi teks di bawah SVG
+                                0.159, 
                             left: 0,
                             right: 0,
                             child: Text(
@@ -128,21 +128,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Positioned(
                             top: screenHeight *
-                                0.28, // Mengatur posisi teks di bawah SVG
+                                0.28, 
                             left: 0,
                             right: 0,
                             child: Text(
                               "Please Login to Continue",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black, // Warna teks
-                                fontSize: 14, // Ukuran teks
+                                color: Colors.black, 
+                                fontSize: 14, 
                               ),
                             ),
                           ),
                           Positioned(
                             top: screenHeight *
-                                0.31, // Mengatur posisi TextField
+                                0.31, 
                             left: 0,
                             right: 0,
                             child: Container(
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(
-                                    0.3), // Latar belakang warna abu-abu blur
+                                    0.3), 
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Row(
@@ -209,7 +209,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         border: InputBorder.none,
                                         suffixIcon: GestureDetector(
                                           onTap: () {
-                                            // Tambahkan logika untuk mengubah obscureText
                                             setState(() {
                                               obscureText = !obscureText;
                                             });
@@ -220,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             obscureText
                                                 ? Icons.visibility_off_rounded
                                                 : Icons
-                                                    .visibility_rounded, // Ganti ikon mata terbuka/tutup
+                                                    .visibility_rounded, 
                                             color: Colors.black,
                                           ),
                                         ),
@@ -284,7 +283,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: screenHeight * 0.03,
                       ),
-                      // make line and between the line text or
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

@@ -82,17 +82,17 @@ class _forgetPassState extends State<forgetPass> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(
-                          0.3), // Latar belakang warna abu-abu blur
+                          0.3), 
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.grey, // Warna border
-                        width: 1.0, // Lebar border
+                        color: Colors.grey, 
+                        width: 1.0, 
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(
-                          Icons.email, // Ikon email
+                          Icons.email, 
                           color: Colors.black,
                         ),
                         SizedBox(width: 12),
@@ -128,7 +128,7 @@ class _forgetPassState extends State<forgetPass> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                recLink()), // Navigasi ke halaman recLink
+                                recLink()), 
                       );
                     },
                     child: Text(

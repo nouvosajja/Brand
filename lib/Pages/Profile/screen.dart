@@ -74,7 +74,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      // make button logout with color gradient
                       Container(
                         margin: EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
