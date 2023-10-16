@@ -1,4 +1,7 @@
+import 'package:brand/Pages/Api/api_config.dart';
+import 'package:brand/Pages/Api/api_service.dart';
 import 'package:brand/Pages/Login/screen.dart';
+import 'package:brand/Pages/Widgets/text_form_global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui';
@@ -13,11 +16,43 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordVisible = false;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  void _navigateToLoginScreen() {
+  final ApiService apiService = ApiService(ApiConfig.baseUrl);
+
+  void _navigateToLoginScreen() { 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => LoginScreen()),
     );
+  }
+
+  void _registerUser(
+      BuildContext context, String name, String email, String password) async {
+    try {
+      final body = {
+        'name': nameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+      };
+
+      final response =
+          await apiService.fetchData("/registration", body: body, isPost: true);
+
+      print("Response from API: $response");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Registrasi berhasil"),
+        duration: Duration(seconds: 2),
+      ));
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Registrasi gagal"),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 
   @override
@@ -96,8 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               Positioned(
-                                top: screenHeight *
-                                    0.02, 
+                                top: screenHeight * 0.02,
                                 left: 0,
                                 right: 0,
                                 child: Align(
@@ -111,8 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               Positioned(
-                                top: screenHeight *
-                                    0.159, 
+                                top: screenHeight * 0.159,
                                 left: 0,
                                 right: 0,
                                 child: Text(
@@ -127,50 +160,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               Positioned(
-                                top: screenHeight *
-                                    0.3, 
+                                top: screenHeight * 0.3,
                                 left: 0,
                                 right: 0,
                                 child: Text(
                                   "Register to use this amazing app",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.black, 
-                                    fontSize: 14, 
+                                    color: Colors.black,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                top: screenHeight *
-                                    0.33, 
+                                top: screenHeight * 0.33,
                                 left: 0,
                                 right: 0,
                                 child: Container(
                                   margin: EdgeInsets.symmetric(horizontal: 24),
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(
-                                        0.3), 
+                                    color: Colors.white.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
                                     children: [
                                       Icon(
-                                        Icons.email, 
+                                        Icons.person_outline_rounded,
                                         color: Colors.black,
                                       ),
-                                      SizedBox(width: 12),
+                                      SizedBox(width: 8),
                                       Expanded(
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintText: "Email",
-                                            hintStyle: TextStyle(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              fontSize: 14,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
+                                        child: TextFormGlobal(
+                                          controller: nameController,
+                                          text: "Name",
+                                          textInputType: TextInputType.name,
+                                          obscure: false,
                                         ),
                                       ),
                                     ],
@@ -179,53 +204,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Gap(10),
                               Positioned(
-                                top: screenHeight *
-                                    0.405, 
+                                top: screenHeight * 0.405,
                                 left: 0,
                                 right: 0,
                                 child: Container(
                                   margin: EdgeInsets.symmetric(horizontal: 24),
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(
-                                        0.3), 
+                                    color: Colors.white.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(
-                                        Icons
-                                            .lock_outline_rounded, 
-                                        color: Colors.black,
+                                      SvgPicture.asset(
+                                        'assets/images/Mail.svg',
+                                        width: 15,
+                                        height: 15,
                                       ),
                                       SizedBox(width: 12),
                                       Expanded(
-                                        child: TextField(
-                                          obscureText:
-                                              !_isPasswordVisible, 
-                                          decoration: InputDecoration(
-                                            hintText: "Password",
-                                            hintStyle: TextStyle(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              fontSize: 14,
-                                            ),
-                                            border: InputBorder.none,
-                                            suffixIcon: IconButton(
-                                              icon: Icon(
-                                                _isPasswordVisible
-                                                    ? Icons.visibility
-                                                    : Icons.visibility_off,
-                                                color: Colors.black,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _isPasswordVisible =
-                                                      !_isPasswordVisible;
-                                                });
-                                              },
-                                            ),
-                                          ),
+                                        child: TextFormGlobal(
+                                          controller: emailController,
+                                          text: "Email",
+                                          textInputType:
+                                              TextInputType.emailAddress,
+                                          obscure: false,
                                         ),
                                       ),
                                     ],
@@ -236,53 +239,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 width: 12,
                               ),
                               Positioned(
-                                top: screenHeight *
-                                    0.480, 
+                                top: screenHeight * 0.480,
                                 left: 0,
                                 right: 0,
                                 child: Container(
                                   margin: EdgeInsets.symmetric(horizontal: 24),
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(
-                                        0.3), 
+                                    color: Colors.white.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(
-                                        Icons
-                                            .lock_outline_rounded, 
-                                        color: Colors.black,
+                                      SvgPicture.asset(
+                                        'assets/images/Lock.svg',
+                                        width: 20,
+                                        height: 20,
                                       ),
                                       SizedBox(width: 12),
                                       Expanded(
-                                        child: TextField(
-                                          obscureText:
-                                              !_isPasswordVisible, 
-                                          decoration: InputDecoration(
-                                            hintText: "Repeat Password",
-                                            hintStyle: TextStyle(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              fontSize: 14,
-                                            ),
-                                            border: InputBorder.none,
-                                            suffixIcon: IconButton(
-                                              icon: Icon(
-                                                _isPasswordVisible
-                                                    ? Icons.visibility
-                                                    : Icons.visibility_off,
-                                                color: Colors.black,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _isPasswordVisible =
-                                                      !_isPasswordVisible;
-                                                });
-                                              },
-                                            ),
-                                          ),
+                                        child: TextFormGlobal(
+                                          controller: passwordController,
+                                          text: "Password",
+                                          textInputType:
+                                              TextInputType.visiblePassword,
+                                          obscure: true,
                                         ),
                                       ),
                                     ],
@@ -302,14 +283,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       colors: [
                                         Color(0xFF4E6EAF),
                                         Color(0xFFA993D3)
-                                      ], 
+                                      ],
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      _registerUser(
+                                          context,
+                                          nameController.text,
+                                          emailController.text,
+                                          passwordController.text);
+                                    },
                                     child: Text(
                                       "REGISTER",
                                       style: TextStyle(
@@ -323,10 +310,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ],
                           ),
-
                           SizedBox(
                             height: 15,
-
                           ),
                           Positioned(
                             top: screenHeight * 0.67,
@@ -390,19 +375,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    'assets/images/google.png', 
-                                    height: 20, 
-                                    width: 20, 
+                                    'assets/images/google.png',
+                                    height: 20,
+                                    width: 20,
                                   ),
-                                  SizedBox(
-                                      width:
-                                          10), 
+                                  SizedBox(width: 10),
                                   Text(
                                     'Register with Google',
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize:
-                                            14, 
+                                        fontSize: 14,
                                         fontFamily: 'Barlow'),
                                   ),
                                 ],

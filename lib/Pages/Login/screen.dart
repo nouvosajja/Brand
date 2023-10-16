@@ -1,8 +1,12 @@
 import 'dart:ui';
-
+import 'package:brand/Pages/Api/api_config.dart';
+import 'package:brand/Pages/Api/api_service.dart';
+import 'package:brand/Pages/Profile/screen.dart';
+import 'package:brand/Pages/Widgets/text_form_global.dart';
 import 'package:brand/Pages/registerScreen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,13 +17,78 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool obscureText = true;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
+
+  final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
   void _navigateToRegisterScreen() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => RegisterScreen()),
     );
+  }
+
+  void _loginUser(BuildContext context, String email, String password) async {
+    try {
+      final body = {
+        'email': emailController.text,
+        'password': passwordController.text,
+      };
+
+      final response =
+          await apiService.fetchData("/login", body: body, isPost: true);
+
+      print("Response from API: $response");
+
+      if (response['success'] == false) {
+        if (response['message'] == 'The account has not been verified') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Akun belum diverifikasi"),
+            duration: Duration(seconds: 2),
+          ));
+        } else if (response['message'] ==
+            'The password you entered is incorrect') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Kata sandi salah"),
+            duration: Duration(seconds: 2),
+          ));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Login gagal"),
+            duration: Duration(seconds: 2),
+          ));
+        }
+      }
+      if (response['success'] == true) {
+        final token = response['data']['token'];
+
+        if (token != null && token is String) {
+          final SharedPreferences pref = await SharedPreferences.getInstance();
+          pref.setString('token', token);
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Login berhasil"),
+            duration: Duration(seconds: 2),
+          ));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()));
+        } else {
+          // Token tidak valid
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Token tidak valid"),
+            duration: Duration(seconds: 2),
+          ));
+        }
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Login gagal"),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 
   @override
@@ -96,8 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Positioned(
-                            top: screenHeight *
-                                0.02, 
+                            top: screenHeight * 0.02,
                             left: 0,
                             right: 0,
                             child: Align(
@@ -111,8 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Positioned(
-                            top: screenHeight *
-                                0.159, 
+                            top: screenHeight * 0.159,
                             left: 0,
                             right: 0,
                             child: Text(
@@ -127,30 +194,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Positioned(
-                            top: screenHeight *
-                                0.28, 
+                            top: screenHeight * 0.28,
                             left: 0,
                             right: 0,
                             child: Text(
                               "Please Login to Continue",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black, 
-                                fontSize: 14, 
+                                color: Colors.black,
+                                fontSize: 14,
                               ),
                             ),
                           ),
                           Positioned(
-                            top: screenHeight *
-                                0.31, 
+                            top: screenHeight * 0.31,
                             left: 0,
                             right: 0,
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 24),
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(
-                                    0.3), 
+                                color: Colors.white.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Row(
@@ -162,15 +226,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   SizedBox(width: 12),
                                   Expanded(
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "Email",
-                                        hintStyle: TextStyle(
-                                          color: Colors.black.withOpacity(0.5),
-                                          fontSize: 14,
-                                        ),
-                                        border: InputBorder.none,
-                                      ),
+                                    child: TextFormGlobal(
+                                      controller: emailController,
+                                      text: "Email",
+                                      textInputType: TextInputType.emailAddress,
+                                      obscure: false,
                                     ),
                                   ),
                                 ],
@@ -197,33 +257,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   SizedBox(width: 12),
                                   Expanded(
-                                    child: TextField(
-                                      key: _passwordFieldKey,
-                                      obscureText: obscureText,
-                                      decoration: InputDecoration(
-                                        hintText: "Password",
-                                        hintStyle: TextStyle(
-                                          color: Colors.black.withOpacity(0.5),
-                                          fontSize: 14,
-                                        ),
-                                        border: InputBorder.none,
-                                        suffixIcon: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              obscureText = !obscureText;
-                                            });
-                                            _passwordFieldKey.currentState
-                                                ?.didChange('');
-                                          },
-                                          child: Icon(
-                                            obscureText
-                                                ? Icons.visibility_off_rounded
-                                                : Icons
-                                                    .visibility_rounded, 
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
+                                    child: TextFormGlobal(
+                                      controller: passwordController,
+                                      text: "Password",
+                                      textInputType:
+                                          TextInputType.visiblePassword,
+                                      obscure: obscureText,
                                     ),
                                   ),
                                 ],
@@ -249,7 +288,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _loginUser(
+                                    context,
+                                    emailController.text,
+                                    passwordController.text,
+                                  );
+                                },
                                 child: Text(
                                   "LOG IN",
                                   style: TextStyle(
