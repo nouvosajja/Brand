@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
 import 'package:brand/Pages/Profile/screen.dart';
@@ -19,8 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscureText = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final GlobalKey<FormFieldState<String>> _passwordFieldKey =
-      GlobalKey<FormFieldState<String>>();
 
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
@@ -31,6 +30,66 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _loginUser(BuildContext context, String email, String password) async {
+    // try {
+    //   final body = {
+    //     'email': emailController.text,
+    //     'password': passwordController.text,
+    //   };
+
+    //   final response =
+    //       await apiService.fetchData("/login", body: body, isPost: true);
+
+    //   print("Response from API: $response");
+
+    //   if (response['success'] == false) {
+    //     if (response['message'] == 'The account has not been verified') {
+    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         content: Text("Akun belum diverifikasi"),
+    //         duration: Duration(seconds: 2),
+    //       ));
+    //     } else if (response['message'] ==
+    //         'The password you entered is incorrect') {
+    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         content: Text("Kata sandi salah"),
+    //         duration: Duration(seconds: 2),
+    //       ));
+    //     } else {
+    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         content: Text("Login gagal"),
+    //         duration: Duration(seconds: 2),
+    //       ));
+    //     }
+    //   }
+    //   if (response['success'] == true) {
+    //     final token = response['data']['token'];
+
+    //     if (token != null && token is String) {
+    //       final SharedPreferences pref = await SharedPreferences.getInstance();
+    //       pref.setString('token', token);
+
+    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         content: Text("Login berhasil"),
+    //         duration: Duration(seconds: 2),
+    //       ));
+    //       Navigator.pushReplacement(context,
+    //           MaterialPageRoute(builder: (context) => ProfileScreen()));
+
+    //     } else {
+    //       // Token tidak valid
+    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         content: Text("Token tidak valid"),
+    //         duration: Duration(seconds: 2),
+    //       ));
+    //     }
+    //   }
+    // } catch (e) {
+    //   print("Error: $e");
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     content: Text("Login gagal"),
+    //     duration: Duration(seconds: 2),
+    //   ));
+    // }
+
     try {
       final body = {
         'email': emailController.text,
@@ -44,21 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response['success'] == false) {
         if (response['message'] == 'The account has not been verified') {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Akun belum diverifikasi"),
-            duration: Duration(seconds: 2),
-          ));
+          showErrorMessage(context, 'Akun belum diverifikasi');
         } else if (response['message'] ==
             'The password you entered is incorrect') {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Kata sandi salah"),
-            duration: Duration(seconds: 2),
-          ));
+          showErrorMessage(context, 'Kata sandi salah');
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Login gagal"),
-            duration: Duration(seconds: 2),
-          ));
+          showErrorMessage(context, 'Login gagal');
         }
       }
       if (response['success'] == true) {
@@ -68,27 +118,41 @@ class _LoginScreenState extends State<LoginScreen> {
           final SharedPreferences pref = await SharedPreferences.getInstance();
           pref.setString('token', token);
 
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Login berhasil"),
-            duration: Duration(seconds: 2),
-          ));
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => ProfileScreen()));
+          showSuccessMessage(context, 'Login berhasil');
+
+          Future.delayed(Duration(seconds: 3), () {
+            Navigator.of(context).pop();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()));
+          });
         } else {
-          // Token tidak valid
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Token tidak valid"),
-            duration: Duration(seconds: 2),
-          ));
+          showErrorMessage(context, 'Token tidak valid');
         }
       }
     } catch (e) {
       print("Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Login gagal"),
-        duration: Duration(seconds: 2),
-      ));
+      showErrorMessage(context, 'Login gagal');
     }
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.topSlide,
+      title: 'Gagal',
+      desc: message,
+    )..show();
+  }
+
+  void showSuccessMessage(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.topSlide,
+      title: 'Selamat!',
+      desc: message,
+    )..show();
   }
 
   @override
@@ -262,7 +326,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                       text: "Password",
                                       textInputType:
                                           TextInputType.visiblePassword,
-                                      obscure: obscureText,
+                                      obscure:
+                                          obscureText, // Gunakan nilai obscureText
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        obscureText =
+                                            !obscureText; // Saat tombol ditekan, ubah nilai obscureText
+                                      });
+                                    },
+                                    icon: Icon(
+                                      obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ],
@@ -289,11 +368,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: TextButton(
                                 onPressed: () {
-                                  _loginUser(
-                                    context,
-                                    emailController.text,
-                                    passwordController.text,
-                                  );
+                                  _loginUser(context, emailController.text,
+                                      passwordController.text);
                                 },
                                 child: Text(
                                   "LOG IN",

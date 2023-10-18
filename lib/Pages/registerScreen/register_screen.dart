@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
 import 'package:brand/Pages/Login/screen.dart';
@@ -22,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
-  void _navigateToLoginScreen() { 
+  void _navigateToLoginScreen() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => LoginScreen()),
     );
@@ -42,17 +43,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       print("Response from API: $response");
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Registrasi berhasil"),
-        duration: Duration(seconds: 2),
-      ));
+      if (response['success'] == true) {
+        showSuccessMessage(context, 'Registrasi berhasil');
+
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.of(context).pop();
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        });
+      } else {
+        showErrorMessage(context, 'Registrasi gagal');
+        Future.delayed(Duration(seconds: 3), () {
+          Navigator.of(context).pop();
+        });
+      }
     } catch (e) {
       print("Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Registrasi gagal"),
-        duration: Duration(seconds: 2),
-      ));
+      showErrorMessage(context, 'Registrasi gagal');
+      Future.delayed(Duration(seconds: 5), () {
+        Navigator.of(context).pop();
+      });
     }
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.topSlide,
+      title: 'Gagal',
+      desc: message,
+    )..show();
+  }
+
+  void showSuccessMessage(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.topSlide,
+      title: 'Sukses!',
+      desc: 'Harap cek email untuk verifikasi akun',
+    )..show();
   }
 
   @override
@@ -263,8 +294,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           text: "Password",
                                           textInputType:
                                               TextInputType.visiblePassword,
-                                          obscure: true,
+                                          obscure:
+                                              !_isPasswordVisible, // Gunakan variabel _isPasswordVisible di sini
                                         ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          _isPasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _isPasswordVisible =
+                                                !_isPasswordVisible; // Tombol "Show Password"
+                                          });
+                                        },
                                       ),
                                     ],
                                   ),

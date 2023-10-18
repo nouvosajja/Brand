@@ -4,10 +4,10 @@ class UserModel {
 
   UserModel({this.success, this.data});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        success: json['success'],
+        data: json['data'] != null ? new Data.fromJson(json['data']) : null,
+      );
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -21,16 +21,13 @@ class UserModel {
 
 class Data {
   String? photo;
-  late String name;
+  String? name;
   String? email;
 
-  Data({this.photo, required this.name, this.email});
+  Data({this.photo, this.name, this.email});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    photo = json['photo'];
-    name = json['name'];
-    email = json['email'];
-  }
+  factory Data.fromJson(Map<String, dynamic> json) =>
+      Data(photo: json['photo'], name: json['name'], email: json['email']);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

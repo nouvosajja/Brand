@@ -14,6 +14,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? name;
   bool isLoading = false;
   UserModel? user;
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
@@ -34,6 +35,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final SharedPreferences pref = await SharedPreferences.getInstance();
     final token = pref.getString('token');
+    String? savedName = pref.getString('name');
+
+    setState(() {
+      name = savedName;
+    });
 
     print('token : $token');
 
@@ -51,10 +57,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-
+        print(responseBody['success']);
+        print(responseBody['success'].runtimeType);
         if (responseBody['success']) {
           setState(() {
-            user = UserModel.fromJson(responseBody['data']);
+            user = UserModel.fromJson(responseBody);
+            name = user?.data?.name;
+            print(responseBody['data']);
           });
         } else {
           throw Exception("Failed to fetch data from API");
@@ -130,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Container(
                               margin: EdgeInsets.only(top: 2),
                               child: Text(
-                                user!.data!.name,
+                                name ?? 'Data tidak ada',
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
