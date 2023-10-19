@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:brand/Pages/Login/screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
@@ -162,7 +163,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  final SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setString("token", "");
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginScreen(),
+                                    ),
+                                  );
+                                },
                                 child: Text(
                                   'LOG OUT',
                                   style: TextStyle(

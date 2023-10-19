@@ -4,6 +4,7 @@ import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
 import 'package:brand/Pages/Profile/screen.dart';
 import 'package:brand/Pages/Widgets/text_form_global.dart';
+import 'package:brand/Pages/forgetPass/forgetPass.dart';
 import 'package:brand/Pages/registerScreen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,71 +25,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
   void _navigateToRegisterScreen() {
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => RegisterScreen()),
     );
   }
-
+  void _navigateToForgetPass() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => forgetPass()),
+    );
+  }
   void _loginUser(BuildContext context, String email, String password) async {
-    // try {
-    //   final body = {
-    //     'email': emailController.text,
-    //     'password': passwordController.text,
-    //   };
-
-    //   final response =
-    //       await apiService.fetchData("/login", body: body, isPost: true);
-
-    //   print("Response from API: $response");
-
-    //   if (response['success'] == false) {
-    //     if (response['message'] == 'The account has not been verified') {
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //         content: Text("Akun belum diverifikasi"),
-    //         duration: Duration(seconds: 2),
-    //       ));
-    //     } else if (response['message'] ==
-    //         'The password you entered is incorrect') {
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //         content: Text("Kata sandi salah"),
-    //         duration: Duration(seconds: 2),
-    //       ));
-    //     } else {
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //         content: Text("Login gagal"),
-    //         duration: Duration(seconds: 2),
-    //       ));
-    //     }
-    //   }
-    //   if (response['success'] == true) {
-    //     final token = response['data']['token'];
-
-    //     if (token != null && token is String) {
-    //       final SharedPreferences pref = await SharedPreferences.getInstance();
-    //       pref.setString('token', token);
-
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //         content: Text("Login berhasil"),
-    //         duration: Duration(seconds: 2),
-    //       ));
-    //       Navigator.pushReplacement(context,
-    //           MaterialPageRoute(builder: (context) => ProfileScreen()));
-
-    //     } else {
-    //       // Token tidak valid
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //         content: Text("Token tidak valid"),
-    //         duration: Duration(seconds: 2),
-    //       ));
-    //     }
-    //   }
-    // } catch (e) {
-    //   print("Error: $e");
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text("Login gagal"),
-    //     duration: Duration(seconds: 2),
-    //   ));
-    // }
 
     try {
       final body = {
@@ -104,11 +50,25 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response['success'] == false) {
         if (response['message'] == 'The account has not been verified') {
           showErrorMessage(context, 'Akun belum diverifikasi');
-        } else if (response['message'] ==
-            'The password you entered is incorrect') {
-          showErrorMessage(context, 'Kata sandi salah');
-        } else {
-          showErrorMessage(context, 'Login gagal');
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+          });
+        }
+      }
+       if (response['success'] == false) {
+        if (response['message'] == 'Account not found, please register first') {
+          showErrorMessage(context, 'Akun Tidak Ditemukan'); 
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+          });
+        }
+      }
+      if (response['success'] == false) {
+        if (response['message'] == 'The password you entered is incorrect') {
+          showErrorMessage(context, 'Password salah'); 
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+          });
         }
       }
       if (response['success'] == true) {
@@ -126,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 MaterialPageRoute(builder: (context) => ProfileScreen()));
           });
         } else {
-          showErrorMessage(context, 'Token tidak valid');
+          showErrorMessage(context, 'Login gagal');
         }
       }
     } catch (e) {
@@ -339,8 +299,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     icon: Icon(
                                       obscureText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -388,7 +348,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             left: 0,
                             right: 0,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _navigateToForgetPass();
+                              },
                               child: Text(
                                 "Forgotten your password?",
                                 style: TextStyle(
