@@ -1,4 +1,10 @@
-import 'package:brand/Pages/forgetPass/receiveLink.dart';
+import 'dart:math';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:brand/Pages/Api/api_config.dart';
+import 'package:brand/Pages/Api/api_service.dart';
+import 'package:brand/Pages/Widgets/text_form_global.dart';
+import 'package:brand/Pages/forgetPass/verifScreen.dart';
 import 'package:flutter/material.dart';
 
 class forgetPass extends StatefulWidget {
@@ -9,6 +15,71 @@ class forgetPass extends StatefulWidget {
 }
 
 class _forgetPassState extends State<forgetPass> {
+  final TextEditingController emailController = TextEditingController();
+  String email = "";
+  final ApiService apiService = ApiService(ApiConfig.baseUrl);
+
+  void _sendemail(BuildContext context) async {
+    try {
+      final body = {
+        'email': emailController.text,
+      };
+
+      final response =
+          await apiService.fetchData("/sendEmail", body: body, isPost: true);
+
+      print("Response from API: $response");
+
+      if (response['success'] == false) {
+        if (response['message'] ==
+            ' Account not found, please register first') {
+          showErrorMessage(context, 'Register terlebih dahulu');
+        } else {
+          showErrorMessage(context, 'Gagal mengirim nomer verifikasi');
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+          });
+        }
+      }
+      if (response['success'] == true) {
+        showSuccessMessage(context, 'Berhasil mengirim nomer verifikasi');
+
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VerificationScreen(
+                        email: emailController.text,
+                      )));
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+      showErrorMessage(context, 'Gagal mengirim nomer verifikasi');
+    }
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.topSlide,
+      title: 'gagal',
+      desc: message,
+    )..show();
+  }
+
+  void showSuccessMessage(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.topSlide,
+      title: 'Berhasil',
+      desc: message,
+    )..show();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: () {
@@ -81,68 +152,60 @@ class _forgetPassState extends State<forgetPass> {
                     margin: EdgeInsets.symmetric(horizontal: 24),
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(
-                          0.3), 
+                      color: Colors.white.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.grey, 
-                        width: 1.0, 
+                        color: Colors.grey,
+                        width: 1.0,
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(
-                          Icons.email, 
+                          Icons.email,
                           color: Colors.black,
                         ),
                         SizedBox(width: 12),
                         Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: "Email",
-                              hintStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                                fontSize: 14,
-                              ),
-                              border: InputBorder.none,
-                            ),
+                          child: TextFormGlobal(
+                            controller: emailController,
+                            text: 'Email',
+                            textInputType: TextInputType.emailAddress,
+                            obscure: false,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: 230, left: 80),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF4E6EAF), Color(0xFFA993D3)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                recLink()), 
-                      );
-                    },
-                    child: Text(
-                      'SEND',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'Helvetica Neue',
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white,
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 230),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF4E6EAF), Color(0xFFA993D3)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
                       ),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                    child: TextButton(
+                      onPressed: () {
+                        _sendemail(context);
+                      },
+                      child: Text(
+                        'SEND',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'Helvetica Neue',
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                      ),
                     ),
                   ),
                 ),
