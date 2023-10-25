@@ -434,6 +434,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     print("berhasil");
                                     print(user.displayName);
                                     print(user.email);
+                                    print(user.photoUrl);
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context)=>ProfileGoogle(googleUser: user)));
                                   }

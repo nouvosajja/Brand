@@ -15,7 +15,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 class RegisterScreen extends StatefulWidget {
   // const RegisterScreen({Key? key,}) : super(key: key);
 
-
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -27,7 +26,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String? nameGoogle;
-
 
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
@@ -434,10 +432,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       //               ProfileGoogle(
                                       //               )));
                                       // }
-                                      final GoogleSignInAccount? user = await GoogleSignInApi.login();
+                                      final GoogleSignInAccount? user =
+                                          await GoogleSignInApi.login();
                                       if (user != null) {
                                         print(user.displayName);
                                         print(user.email);
+                                        print(user.photoUrl);
                                         // String? name = user.displayName;
                                         // String email = user.email;
                                         // Call your registration function with the obtained data
@@ -447,7 +447,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ProfileGoogle(googleUser: user,)));
+                                                    ProfileGoogle(
+                                                      googleUser: user,
+                                                    )));
                                       }
                                     },
                                     child: Text(
