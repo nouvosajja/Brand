@@ -54,6 +54,15 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs{
+        release{
+            keyAlias 'androiddebugkey'
+            keyPassword '123456'
+            storeFile file('D:/login-key.jks')
+            storePassword '123456'
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

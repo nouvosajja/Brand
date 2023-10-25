@@ -1,25 +1,33 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
+import 'package:brand/Pages/Api/google_signin_api.dart';
 import 'package:brand/Pages/Login/screen.dart';
+import 'package:brand/Pages/Profile/screen.dart';
+import 'package:brand/Pages/Profile/screen_google.dart';
 import 'package:brand/Pages/Widgets/text_form_global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui';
 import 'package:gap/gap.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  // const RegisterScreen({Key? key,}) : super(key: key);
+
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  bool isGoogleSignIn = false;
   bool _isPasswordVisible = false;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String? nameGoogle;
+
 
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
@@ -397,44 +405,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: 15,
                           ),
                           Container(
-                            width: screenWidth * 0.625,
+                            width: screenWidth * 0.55,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.transparent),
-                                elevation: MaterialStateProperty.all<double>(0),
-                                shape:
-                                    MaterialStateProperty.all<OutlinedBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/google.png',
+                                  width: 24,
+                                  height: 24,
                                 ),
-                              ),
-                              onPressed: () {},
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/google.png',
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'Register with Google',
-                                    style: TextStyle(
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      // var user = await GoogleSignInApi.login();
+                                      // if (user != null) {
+                                      //   print("bisa");
+                                      //   print(user.displayName);
+                                      //   print(user.email);
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder: (context) =>
+                                      //               ProfileGoogle(
+                                      //               )));
+                                      // }
+                                      final GoogleSignInAccount? user = await GoogleSignInApi.login();
+                                      if (user != null) {
+                                        print(user.displayName);
+                                        print(user.email);
+                                        // String? name = user.displayName;
+                                        // String email = user.email;
+                                        // Call your registration function with the obtained data
+                                        // _registerUser(
+                                        //     context, name!, email, '');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProfileGoogle(googleUser: user,)));
+                                      }
+                                    },
+                                    child: Text(
+                                      "Register with Google",
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 14,
-                                        fontFamily: 'Barlow'),
+                                        fontFamily: 'Barlow',
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -484,4 +510,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+
+  // Future signIn() async {
+  //   final user = await GoogleSignInApi.login();
+  //   if (user == null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Sign in failed'),
+  //       ),
+  //     );
+  //   } else {
+  //     Navigator.of(context).pushReplacement(
+  //         MaterialPageRoute(builder: (context) => ProfileScreen()));
+  //   }
+  // }
 }
