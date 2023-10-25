@@ -3,21 +3,31 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
 import 'package:brand/Pages/Profile/screen.dart';
+import 'package:brand/Pages/Profile/screen_google.dart';
 import 'package:brand/Pages/Widgets/text_form_global.dart';
 import 'package:brand/Pages/forgetPass/forgetPass.dart';
 import 'package:brand/Pages/registerScreen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Api/google_signin_api.dart';
+
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  // final GoogleSignInAccount user;
+
+  // LoginScreen({
+  //   Key? key,
+  //   required this.user,
+  // }) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool isGoogleSignIn = false;
   bool obscureText = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -29,13 +39,14 @@ class _LoginScreenState extends State<LoginScreen> {
       MaterialPageRoute(builder: (context) => RegisterScreen()),
     );
   }
+
   void _navigateToForgetPass() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => forgetPass()),
     );
   }
-  void _loginUser(BuildContext context, String email, String password) async {
 
+  Future<void> _loginUser(BuildContext context, String email, String password) async {
     try {
       final body = {
         'email': emailController.text,
@@ -55,9 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         }
       }
-       if (response['success'] == false) {
+      if (response['success'] == false) {
         if (response['message'] == 'Account not found, please register first') {
-          showErrorMessage(context, 'Akun Tidak Ditemukan'); 
+          showErrorMessage(context, 'Akun Tidak Ditemukan');
           Future.delayed(Duration(seconds: 2), () {
             Navigator.of(context).pop();
           });
@@ -65,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       if (response['success'] == false) {
         if (response['message'] == 'The password you entered is incorrect') {
-          showErrorMessage(context, 'Password salah'); 
+          showErrorMessage(context, 'Password salah');
           Future.delayed(Duration(seconds: 2), () {
             Navigator.of(context).pop();
           });
@@ -73,10 +84,12 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       if (response['success'] == true) {
         final token = response['data']['token'];
+        final userName = response['data']['name']; 
 
         if (token != null && token is String) {
           final SharedPreferences pref = await SharedPreferences.getInstance();
           pref.setString('token', token);
+          pref.setString('name', userName);
 
           showSuccessMessage(context, 'Login berhasil');
 
@@ -415,7 +428,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(width: 12),
                             Expanded(
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  var user = await GoogleSignInApi.login();
+                                  if (user != null) {
+                                    print("berhasil");
+                                    print(user.displayName);
+                                    print(user.email);
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context)=>ProfileGoogle(googleUser: user)));
+                                  }
+                                },
                                 child: Text(
                                   "Login with Google",
                                   style: TextStyle(

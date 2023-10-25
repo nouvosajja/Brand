@@ -8,77 +8,28 @@ import 'package:brand/Pages/Model/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
+class ProfileGoogle extends StatefulWidget {
+  final GoogleSignInAccount? googleUser;
+  const ProfileGoogle({
     Key? key,
+    this.googleUser,
   }) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileGoogle> createState() => _ProfileGoogleState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileGoogleState extends State<ProfileGoogle> {
   String? name;
   bool isLoading = false;
   UserModel? user;
   String? nameGoogle;
-  final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
   @override
   void initState() {
-    _fetchUserData();
-    _fetchUserData().then((value) {
-      setState(() {
-        user = value;
-      });
-    });
     super.initState();
-  }
-
-  Future _fetchUserData() async {
-    final Uri url = Uri.parse(ApiConfig.baseUrl + "/profile");
-
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    final token = pref.getString('token');
-    final savedName = pref.getString('name');
-    // String? savedName = pref.getString('name');
-    setState(() {
-      name = savedName;
-    });
-
-    print('token : $token');
-
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      print(response.body);
-      print('status code : ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseBody = json.decode(response.body);
-        print(responseBody['success']);
-        print(responseBody['success'].runtimeType);
-        if (responseBody['success']) {
-          setState(() {
-            user = UserModel.fromJson(responseBody);
-            name = user?.data?.name;
-            print(responseBody['data']);
-          });
-        } else {
-          throw Exception("Failed to fetch data from API");
-        }
-      } else {
-        throw Exception("Failed to fetch data from API");
-      }
-    } catch (e) {
-      print(e.toString());
-    }
+    nameGoogle = widget
+        .googleUser?.displayName; // Ambil nama dari objek GoogleSignInAccount
   }
 
   @override
@@ -144,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Container(
                               margin: EdgeInsets.only(top: 2),
                               child: Text(
-                                name ?? 'Data tidak ada',
+                                name ?? nameGoogle ?? 'Data kosong',
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
