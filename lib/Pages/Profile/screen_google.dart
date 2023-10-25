@@ -24,12 +24,14 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
   bool isLoading = false;
   UserModel? user;
   String? nameGoogle;
+  String? photoGoogle;
 
   @override
   void initState() {
     super.initState();
     nameGoogle = widget
         .googleUser?.displayName; // Ambil nama dari objek GoogleSignInAccount
+    photoGoogle = widget.googleUser?.photoUrl;
   }
 
   @override
@@ -77,7 +79,8 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
                               child: CircleAvatar(
                                 radius: 50,
                                 backgroundImage:
-                                    AssetImage('assets/images/PP.png'),
+                                    // AssetImage('assets/images/PP.png'),
+                                    NetworkImage(photoGoogle!)
                               ),
                             ),
                             Container(
