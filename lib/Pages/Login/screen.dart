@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:html';
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:brand/Pages/Api/api_config.dart';
@@ -11,8 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../Api/google_signin_api.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   // final GoogleSignInAccount user;
@@ -46,7 +48,110 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _loginUser(BuildContext context, String email, String password) async {
+  void _loginGoogle() async {
+    var url =
+        'https://brand.playease.site/api/google'; // Gantilah dengan URL otentikasi OAuth 2.0 Anda
+
+    try {
+      if (await launch(url)) {
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
+      showErrorMessage(
+          context, 'Terjadi kesalahan saat membuka URL otentikasi');
+      return;
+    }
+  }
+
+  // void _loginGoogle() async {
+  //   final GoogleSignIn googleSignIn = GoogleSignIn();
+  //   final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+  //   if (googleUser != null) {
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
+  //     final String? accessToken =
+  //         googleAuth.accessToken; // Token dari Google Sign-In
+  //     _handleToken(
+  //         accessToken!); // Here you must ensure that accessToken is not null
+  //   } else {
+  //     return;
+  //   }
+  // }
+
+  // void _loginGoogle() async {
+  //   try {
+  //     final response =
+  //         await _callGoogleAPI(); // Panggil metode untuk menghubungi API Google Anda
+  //     if (response != null) {
+  //       _handleToken(response['token']); // Handle token dari respons API
+  //     }
+  //   } catch (e) {
+  //     print("Error during Google login: $e");
+  //     showErrorMessage(context, 'Login gagal');
+  //     Future.delayed(Duration(seconds: 3), () {
+  //       Navigator.of(context).pop();
+  //     });
+  //   }
+  // }
+
+  // Future<Map<String, dynamic>?> _callGoogleAPI() async {
+  //   var url = 'https://brand.playease.site/google';
+  //   try {
+  //     // final url =
+  //     //     'https://accounts.google.com/o/oauth2/auth?client_id=329073525441-5r4mlijv8033shl9i3snpegre9kk8nk8.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fbrand.playease.site%2Fapi%2Fgoogle%2Fcallback&scope=openid+profile+email&response_type=code'; // Ganti dengan URL backend yang sesuai
+  //     // final result = await http.get(Uri.parse(url));
+
+  //     //   if (result.statusCode == 200) {
+  //     //     return json.decode(
+  //     //         result.body); // Respons API yang berisi token atau data relevan
+  //     //   } else {
+  //     //     throw 'Failed to fetch data';
+  //     //   }
+  //     // } catch (e) {
+  //     //   throw 'Error calling Google API: $e';
+  //     // }
+  //     if (await launch(url)) {
+  //       _handleToken;
+  //     } else {
+  //       throw 'Could not launch $url';
+  //     }
+  //   } catch (e) {
+  //     print('Error launching URL: $e');
+  //     showErrorMessage(
+  //         context, 'Terjadi kesalahan saat membuka URL otentikasi');
+  //   }
+  // }
+
+  // void _handleToken(String token) async {
+  //   // Disimpan token ke Shared Preferences atau proses autentikasi lainnya
+  //   final SharedPreferences pref = await SharedPreferences.getInstance();
+  //   pref.setString('token', token);
+
+  //   // Kembali ke aplikasi setelah token berhasil diperoleh
+  //   _handleReturningFromGoogleAuth();
+  // }
+
+  // void _handleReturningFromGoogleAuth() async {
+  //   final SharedPreferences pref = await SharedPreferences.getInstance();
+  //   String? token = pref.getString('token');
+
+  //   if (token != null && token.isNotEmpty) {
+  //     // Jika token tersedia, lanjutkan ke halaman ProfileGoogle
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ProfileGoogle()),
+  //     );
+  //   } else {
+  //     // Jika token tidak tersedia, tampilkan pesan error
+  //     showErrorMessage(context, 'Token not found');
+  //   }
+  // }
+
+  Future<void> _loginUser(
+      BuildContext context, String email, String password) async {
     try {
       final body = {
         'email': emailController.text,
@@ -54,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
       };
 
       final response =
-          await apiService.fetchData("/login", body: body, isPost: true);
+          await apiService.fetchData("/api/login", body: body, isPost: true);
 
       print("Response from API: $response");
 
@@ -84,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       if (response['success'] == true) {
         final token = response['data']['token'];
-        final userName = response['data']['name']; 
+        final userName = response['data']['name'];
 
         if (token != null && token is String) {
           final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -127,6 +232,42 @@ class _LoginScreenState extends State<LoginScreen> {
       desc: message,
     )..show();
   }
+
+  // Future<void> _loginGoogle(
+  //   BuildContext context,
+  // ) async {
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+  //     if (googleUser == null) {
+  //       // User membatalkan proses login Google.
+  //       return;
+  //     }
+
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
+  //     final String? accessToken = googleAuth.accessToken;
+
+  //     final response = await http.get(
+  //       Uri.parse('https://brand.playease.site/google'),
+  //       headers: {
+  //         'Authorization': 'Bearer $accessToken',
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       print("Login berhasil: ${response.body}");
+  //     } else {
+  //       showErrorMessage(context, 'Login gagal');
+  //     }
+  //   } catch (e) {
+  //     print("Error: $e");
+  //     showErrorMessage(context, 'Login gagal');
+  //     Future.delayed(Duration(seconds: 3), () {
+  //       Navigator.of(context).pop();
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -299,15 +440,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                       text: "Password",
                                       textInputType:
                                           TextInputType.visiblePassword,
-                                      obscure:
-                                          obscureText, // Gunakan nilai obscureText
+                                      obscure: obscureText,
                                     ),
                                   ),
                                   IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        obscureText =
-                                            !obscureText; // Saat tombol ditekan, ubah nilai obscureText
+                                        obscureText = !obscureText;
                                       });
                                     },
                                     icon: Icon(
@@ -428,16 +567,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(width: 12),
                             Expanded(
                               child: TextButton(
-                                onPressed: () async {
-                                  var user = await GoogleSignInApi.login();
-                                  if (user != null) {
-                                    print("berhasil");
-                                    print(user.displayName);
-                                    print(user.email);
-                                    print(user.photoUrl);
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context)=>ProfileGoogle(googleUser: user)));
-                                  }
+                                onPressed: () {
+                                  // var user = await GoogleSignInApi.login();
+                                  // if (user != null) {
+                                  //   print("berhasil");
+                                  //   print(user.displayName);
+                                  //   print(user.email);
+                                  //   print(user.photoUrl);
+                                  //   Navigator.push(context,
+                                  //       MaterialPageRoute(builder: (context)=>ProfileGoogle(googleUser: user)));
+                                  // }
+                                  _loginGoogle();
                                 },
                                 child: Text(
                                   "Login with Google",
