@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
+import 'package:brand/Pages/Model/UserModel.dart';
 import 'package:brand/Pages/Profile/screen.dart';
 import 'package:brand/Pages/Profile/screen_google.dart';
 import 'package:brand/Pages/Widgets/text_form_global.dart';
@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscureText = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email','token']);
 
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
@@ -48,38 +49,47 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _loginGoogle() async {
-    var url =
-        'https://brand.playease.site/api/google'; // Gantilah dengan URL otentikasi OAuth 2.0 Anda
-
-    try {
-      if (await launch(url)) {
-      } else {
-        throw 'Could not launch $url';
-      }
-    } catch (e) {
-      print('Error launching URL: $e');
-      showErrorMessage(
-          context, 'Terjadi kesalahan saat membuka URL otentikasi');
-      return;
-    }
-  }
-
   // void _loginGoogle() async {
-  //   final GoogleSignIn googleSignIn = GoogleSignIn();
-  //   final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  //   var url =
+  //       'https://brand.playease.site/api/google'; // Gantilah dengan URL otentikasi OAuth 2.0 Anda
 
-  //   if (googleUser != null) {
-  //     final GoogleSignInAuthentication googleAuth =
-  //         await googleUser.authentication;
-  //     final String? accessToken =
-  //         googleAuth.accessToken; // Token dari Google Sign-In
-  //     _handleToken(
-  //         accessToken!); // Here you must ensure that accessToken is not null
-  //   } else {
+  //   try {
+  //     if (await launch(url)) {
+  //     } else {
+  //       throw 'Could not launch $url';
+  //     }
+  //   } catch (e) {
+  //     print('Error launching URL: $e');
+  //     showErrorMessage(
+  //         context, 'Terjadi kesalahan saat membuka URL otentikasi');
   //     return;
   //   }
   // }
+
+  void _loginGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+
+      if (googleSignInAccount != null) {
+        print('Login dengan Google Berhasil');
+        print('Email: ${googleSignInAccount.email}');
+        print('Nama Tampilan: ${googleSignInAccount.displayName}');
+        print('Coba: ${googleSignInAccount}');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfileGoogle(googleUser: googleSignInAccount)),
+        );
+      } else {
+        print('Login dengan Google Dibatalkan');
+      }
+    } catch (error) {
+      print('Kesalahan selama Login dengan Google: $error');
+      showErrorMessage(context, 'Terjadi kesalahan selama login dengan google');
+      Future.delayed(Duration(seconds: 3), () {
+        Navigator.of(context).pop();
+      });
+    }
+  }
 
   // void _loginGoogle() async {
   //   try {
