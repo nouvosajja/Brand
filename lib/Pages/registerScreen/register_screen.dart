@@ -3,7 +3,6 @@ import 'package:brand/Pages/Api/api_config.dart';
 import 'package:brand/Pages/Api/api_service.dart';
 import 'package:brand/Pages/Api/google_signin_api.dart';
 import 'package:brand/Pages/Login/screen.dart';
-import 'package:brand/Pages/Profile/screen.dart';
 import 'package:brand/Pages/Profile/screen_google.dart';
 import 'package:brand/Pages/Widgets/text_form_global.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       };
 
       final response =
-          await apiService.fetchData("/registration", body: body, isPost: true);
+          await apiService.fetchData("/api/registration", body: body, isPost: true);
 
       print("Response from API: $response");
 

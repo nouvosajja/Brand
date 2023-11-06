@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:brand/Pages/Api/google_signin_api.dart';
 import 'package:brand/Pages/Login/screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,12 +26,12 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
   UserModel? user;
   String? nameGoogle;
   String? photoGoogle;
+  String? _idToken;
 
   @override
   void initState() {
     super.initState();
-    nameGoogle = widget
-        .googleUser?.displayName; // Ambil nama dari objek GoogleSignInAccount
+    nameGoogle = widget.googleUser?.displayName;
     photoGoogle = widget.googleUser?.photoUrl;
   }
 
@@ -77,11 +78,10 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
                           children: [
                             Container(
                               child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage:
-                                    // AssetImage('assets/images/PP.png'),
-                                    NetworkImage(photoGoogle!)
-                              ),
+                                  radius: 50,
+                                  backgroundImage:
+                                      // AssetImage('assets/images/PP.png'),
+                                      NetworkImage(photoGoogle!)),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 20),
@@ -122,9 +122,10 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
                               ),
                               child: TextButton(
                                 onPressed: () async {
-                                  final SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setString("token", "");
+                                  // final SharedPreferences prefs =
+                                  //     await SharedPreferences.getInstance();
+                                  // prefs.setString("id", "");
+                                  await GoogleSignInApi.logout();
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
