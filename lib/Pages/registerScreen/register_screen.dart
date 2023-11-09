@@ -43,8 +43,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'password': passwordController.text,
       };
 
-      final response =
-          await apiService.fetchData("/api/registration", body: body, isPost: true);
+      final response = await apiService.fetchData("/api/registration",
+          body: body, isPost: true);
 
       print("Response from API: $response");
 
@@ -402,7 +402,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: 15,
                           ),
                           Container(
-                            width: screenWidth * 0.55,
+                            width: screenWidth * 0.60,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.6),

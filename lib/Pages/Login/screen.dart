@@ -16,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../Api/google_signin_api.dart';
+
 class LoginScreen extends StatefulWidget {
   // final GoogleSignInAccount user;
 
@@ -33,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscureText = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email','token']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'token']);
 
   final ApiService apiService = ApiService(ApiConfig.baseUrl);
 
@@ -49,47 +51,69 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // void _loginGoogle() async {
-  //   var url =
-  //       'https://brand.playease.site/api/google'; // Gantilah dengan URL otentikasi OAuth 2.0 Anda
+void _loginGoogle(GoogleSignInAccount user) async {
+  try {
+    print('Login dengan Google Berhasil');
+    print('Email: ${user.email}');
+    print('Nama Tampilan: ${user.displayName}');
+    
+    final GoogleSignInAuthentication googleAuth = await user.authentication;
+    final String? accessToken = googleAuth.accessToken;
 
+    if (accessToken != null) {
+      // Simpan token ke SharedPreferences atau proses autentikasi lainnya
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString('token', accessToken);
+      print('Access Token: $accessToken');
+
+      // Pindah ke halaman ProfileGoogle setelah token berhasil diperoleh
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileGoogle(googleUser: user),
+        ),
+      );
+    } else {
+      print('Gagal mendapatkan access token dari Google Sign-In');
+      showErrorMessage(context, 'Gagal mendapatkan access token dari Google');
+    }
+  } catch (error) {
+    print('Kesalahan selama Login dengan Google: $error');
+    showErrorMessage(context, 'Terjadi kesalahan selama login dengan Google');
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pop();
+    });
+  }
+}
+
+
+  // void _loginGoogle() async {
   //   try {
-  //     if (await launch(url)) {
+  //     final GoogleSignInAccount? googleSignInAccount =
+  //         await _googleSignIn.signIn();
+
+  //     if (googleSignInAccount != null) {
+  //       print('Login dengan Google Berhasil');
+  //       print('Email: ${googleSignInAccount.email}');
+  //       print('Nama Tampilan: ${googleSignInAccount.displayName}');
+  //       print('Coba: ${googleSignInAccount}');
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) =>
+  //                 ProfileGoogle(googleUser: googleSignInAccount)),
+  //       );
   //     } else {
-  //       throw 'Could not launch $url';
+  //       print('Login dengan Google Dibatalkan');
   //     }
-  //   } catch (e) {
-  //     print('Error launching URL: $e');
-  //     showErrorMessage(
-  //         context, 'Terjadi kesalahan saat membuka URL otentikasi');
-  //     return;
+  //   } catch (error) {
+  //     print('Kesalahan selama Login dengan Google: $error');
+  //     showErrorMessage(context, 'Terjadi kesalahan selama login dengan google');
+  //     Future.delayed(Duration(seconds: 3), () {
+  //       Navigator.of(context).pop();
+  //     });
   //   }
   // }
-
-  void _loginGoogle() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-
-      if (googleSignInAccount != null) {
-        print('Login dengan Google Berhasil');
-        print('Email: ${googleSignInAccount.email}');
-        print('Nama Tampilan: ${googleSignInAccount.displayName}');
-        print('Coba: ${googleSignInAccount}');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfileGoogle(googleUser: googleSignInAccount)),
-        );
-      } else {
-        print('Login dengan Google Dibatalkan');
-      }
-    } catch (error) {
-      print('Kesalahan selama Login dengan Google: $error');
-      showErrorMessage(context, 'Terjadi kesalahan selama login dengan google');
-      Future.delayed(Duration(seconds: 3), () {
-        Navigator.of(context).pop();
-      });
-    }
-  }
 
   // void _loginGoogle() async {
   //   try {
@@ -561,7 +585,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: screenHeight * 0.02,
                       ),
                       Container(
-                        width: screenWidth * 0.55,
+                        width: screenWidth * 0.57,
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.6),
@@ -577,17 +601,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(width: 12),
                             Expanded(
                               child: TextButton(
-                                onPressed: () {
-                                  // var user = await GoogleSignInApi.login();
-                                  // if (user != null) {
-                                  //   print("berhasil");
-                                  //   print(user.displayName);
-                                  //   print(user.email);
-                                  //   print(user.photoUrl);
-                                  //   Navigator.push(context,
-                                  //       MaterialPageRoute(builder: (context)=>ProfileGoogle(googleUser: user)));
-                                  // }
-                                  _loginGoogle();
+                                onPressed: () async {
+                                  var user = await GoogleSignInApi.login();
+                                  if (user != null) {
+                                    print("berhasil");
+                                    print(user.displayName);
+                                    print(user.email);
+                                    print(user.photoUrl);
+                                    _loginGoogle(user);
+                                  }
                                 },
                                 child: Text(
                                   "Login with Google",

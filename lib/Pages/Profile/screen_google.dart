@@ -26,7 +26,6 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
   UserModel? user;
   String? nameGoogle;
   String? photoGoogle;
-  String? _idToken;
 
   @override
   void initState() {
