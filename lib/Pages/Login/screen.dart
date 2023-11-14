@@ -53,9 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
 void _loginGoogle(GoogleSignInAccount user) async {
   try {
-    print('Login dengan Google Berhasil');
-    print('Email: ${user.email}');
-    print('Nama Tampilan: ${user.displayName}');
+    // print('Login dengan Google Berhasil');
+    // print('Email: ${user.email}');
+    // print('Nama Tampilan: ${user.displayName}');
     
     final GoogleSignInAuthentication googleAuth = await user.authentication;
     final String? accessToken = googleAuth.accessToken;
@@ -193,7 +193,7 @@ void _loginGoogle(GoogleSignInAccount user) async {
       };
 
       final response =
-          await apiService.fetchData("/api/login", body: body, isPost: true);
+          await apiService.fetchData("/api/login", body: body, isPost: true, authToken: '');
 
       print("Response from API: $response");
 
@@ -604,7 +604,7 @@ void _loginGoogle(GoogleSignInAccount user) async {
                                 onPressed: () async {
                                   var user = await GoogleSignInApi.login();
                                   if (user != null) {
-                                    print("berhasil");
+                                    print("berhasil login");
                                     print(user.displayName);
                                     print(user.email);
                                     print(user.photoUrl);

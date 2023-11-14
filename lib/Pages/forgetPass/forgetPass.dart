@@ -26,7 +26,7 @@ class _forgetPassState extends State<forgetPass> {
       };
 
       final response =
-          await apiService.fetchData("/sendEmail", body: body, isPost: true);
+          await apiService.fetchData("/sendEmail", body: body, isPost: true, authToken: '');
 
       print("Response from API: $response");
 

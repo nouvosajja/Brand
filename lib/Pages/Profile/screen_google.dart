@@ -27,11 +27,41 @@ class _ProfileGoogleState extends State<ProfileGoogle> {
   String? nameGoogle;
   String? photoGoogle;
 
+  void fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final GoogleSignInAuthentication googleAuth =
+          await widget.googleUser!.authentication;
+      final String? accessToken = googleAuth.accessToken;
+
+      if (accessToken != null) {
+        final apiService = ApiService('https://brand.playease.site');
+        final data = await apiService.getProfileData('profile', accessToken);
+
+        // Gunakan data sesuai kebutuhan
+        // Contoh: Ambil 'name' dari data
+        setState(() {
+          name = data['name'];
+        });
+      }
+    } catch (error) {
+      print('Error fetching profile data: $error');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     nameGoogle = widget.googleUser?.displayName;
     photoGoogle = widget.googleUser?.photoUrl;
+    fetchData();
   }
 
   @override

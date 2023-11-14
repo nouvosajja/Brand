@@ -10,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui';
 import 'package:gap/gap.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   // const RegisterScreen({Key? key,}) : super(key: key);
@@ -34,6 +35,104 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  // void _registerGoogle(GoogleSignInAccount user) async {
+  //   try {
+  //     // print('Login dengan Google Berhasil');
+  //     // print('Email: ${user.email}');
+  //     // print('Nama Tampilan: ${user.displayName}');
+
+  //     final GoogleSignInAuthentication googleAuth = await user.authentication;
+  //     final String? accessToken = googleAuth.accessToken;
+
+  //     if (accessToken != null) {
+  //       // Simpan token ke SharedPreferences atau proses autentikasi lainnya
+  //       final SharedPreferences pref = await SharedPreferences.getInstance();
+  //       pref.setString('token', accessToken);
+  //       print('Access Token: $accessToken');
+
+  //       // Pindah ke halaman ProfileGoogle setelah token berhasil diperoleh
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => ProfileGoogle(googleUser: user),
+  //         ),
+  //       );
+  //     } else {
+  //       print('Gagal mendapatkan access token dari Google Sign-In');
+  //       showErrorMessage(context, 'Gagal mendapatkan access token dari Google');
+  //     }
+  //   } catch (error) {
+  //     print('Kesalahan selama Login dengan Google: $error');
+  //     showErrorMessage(context, 'Terjadi kesalahan selama login dengan Google');
+  //     Future.delayed(Duration(seconds: 3), () {
+  //       Navigator.of(context).pop();
+  //     });
+  //   }
+  // }
+
+  void _registerGoogle(GoogleSignInAccount user) async {
+  try {
+    final GoogleSignInAuthentication googleAuth = await user.authentication;
+    final String? accessToken = googleAuth.accessToken;
+
+    if (accessToken != null) {
+      final apiUrl = 'https://brand.playease.site/api/oauthGoogle';
+
+      final body = {
+        'name': user.displayName,
+        'email': user.email,
+      };
+
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      };
+
+      final apiService = ApiService('https://brand.playease.site');
+      final apiResponse = await apiService.fetchData(
+        '/api/oauthGoogle',
+        body: body,
+        isPost: true,
+        headers: headers,
+        authToken: accessToken,
+      );
+
+      if (apiResponse != null) {
+        // Proses berhasil
+        print('Data berhasil disimpan ke API');
+        showSuccessMessage(context, 'Registrasi dengan Google berhasil');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileGoogle(googleUser: user),
+          ),
+        );
+      } else {
+        // Proses gagal
+        print('Register gagal menyimpan data ke API');
+        showErrorMessage(context, 'Gagal menyimpan data ke API');
+        Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pop();
+    });
+      }
+    } else {
+      print('Gagal mendapatkan access token dari Google Sign-In');
+      showErrorMessage(context, 'Gagal mendapatkan access token dari Google');
+      Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pop();
+    });
+    }
+  } catch (error) {
+    print('Kesalahan selama registrasi dengan Google: $error');
+    showErrorMessage(
+        context, 'Terjadi kesalahan selama registrasi dengan Google');
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pop();
+    });
+  }
+}
+
+
   void _registerUser(
       BuildContext context, String name, String email, String password) async {
     try {
@@ -44,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       };
 
       final response = await apiService.fetchData("/api/registration",
-          body: body, isPost: true);
+          body: body, isPost: true, authToken: '');
 
       print("Response from API: $response");
 
@@ -419,36 +518,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Expanded(
                                   child: TextButton(
                                     onPressed: () async {
-                                      // var user = await GoogleSignInApi.login();
-                                      // if (user != null) {
-                                      //   print("bisa");
-                                      //   print(user.displayName);
-                                      //   print(user.email);
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder: (context) =>
-                                      //               ProfileGoogle(
-                                      //               )));
-                                      // }
-                                      final GoogleSignInAccount? user =
-                                          await GoogleSignInApi.login();
+                                      var user = await GoogleSignInApi.login();
                                       if (user != null) {
+                                        print("berhasil registrasi");
                                         print(user.displayName);
                                         print(user.email);
                                         print(user.photoUrl);
-                                        // String? name = user.displayName;
-                                        // String email = user.email;
-                                        // Call your registration function with the obtained data
-                                        // _registerUser(
-                                        //     context, name!, email, '');
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProfileGoogle(
-                                                      googleUser: user,
-                                                    )));
+                                        _registerGoogle(user);
                                       }
                                     },
                                     child: Text(

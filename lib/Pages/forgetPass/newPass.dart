@@ -33,7 +33,7 @@ class _newPassState extends State<newPass> {
       final response = await apiService.fetchData(
           "/forget-password/${widget.token}",
           body: body,
-          isPost: true);
+          isPost: true, authToken: '');
 
       print("Response from API: $response");
 

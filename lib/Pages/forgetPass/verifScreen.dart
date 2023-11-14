@@ -73,7 +73,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
 void _resendToken(BuildContext context) async {
-  final dynamic responseData = await apiService.fetchData("/resendOTP/${widget.email}", isPost: true);
+  final dynamic responseData = await apiService.fetchData("/resendOTP/${widget.email}", isPost: true, authToken: '');
   print("Response from API: $responseData");
 
   if (responseData is Map<String, dynamic>) {
@@ -106,7 +106,7 @@ void _resendToken(BuildContext context) async {
       };
 
       final response =
-          await apiService.fetchData("/checkOTP", body: body, isPost: true);
+          await apiService.fetchData("/checkOTP", body: body, isPost: true, authToken: '');
 
       print("Response from API: $response");
 
