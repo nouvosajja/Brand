@@ -89,16 +89,17 @@ class ApiService {
     bool isPost = false,
     Map<String, String>? headers,
     String? authToken,
+    String? accessToken
   }) async {
     final url = Uri.parse("$baseUrl$endpoint");
     late http.Response response; // Tambahkan deklarasi variabel response di sini
 
     try {
       if (isPost) {
-        response = await http.post(
+        response = await http.get(
           url,
           headers: _buildHeaders(headers, authToken),
-          body: jsonEncode(body),
+          // body: jsonEncode(body),
         );
       } else {
         response = await http.get(

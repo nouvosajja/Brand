@@ -71,67 +71,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // }
 
   void _registerGoogle(GoogleSignInAccount user) async {
-  try {
-    final GoogleSignInAuthentication googleAuth = await user.authentication;
-    final String? accessToken = googleAuth.accessToken;
+    try {
+      final GoogleSignInAuthentication googleAuth = await user.authentication;
+      final String? accessToken = googleAuth.accessToken;
 
-    if (accessToken != null) {
-      final apiUrl = 'https://brand.playease.site/api/oauthGoogle';
+      if (accessToken != null) {
+        final apiUrl = 'https://brand.playease.site/api/oauthGoogle';
 
-      final body = {
-        'name': user.displayName,
-        'email': user.email,
-      };
+        final body = {
+          'name': user.displayName,
+          'email': user.email,
+        };
 
-      final Map<String, String> headers = {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      };
+        final Map<String, String> headers = {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        };
 
-      final apiService = ApiService('https://brand.playease.site');
-      final apiResponse = await apiService.fetchData(
-        '/api/oauthGoogle',
-        body: body,
-        isPost: true,
-        headers: headers,
-        authToken: accessToken,
-      );
-
-      if (apiResponse != null) {
-        // Proses berhasil
-        print('Data berhasil disimpan ke API');
-        showSuccessMessage(context, 'Registrasi dengan Google berhasil');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProfileGoogle(googleUser: user),
-          ),
+        final apiService = ApiService('https://brand.playease.site');
+        final apiResponse = await apiService.fetchData(
+          '/api/oauthGoogle/${accessToken}',
+          body: body,
+          isPost: true,
+          headers: headers,
+          authToken: accessToken,
         );
-      } else {
-        // Proses gagal
-        print('Register gagal menyimpan data ke API');
-        showErrorMessage(context, 'Gagal menyimpan data ke API');
-        Future.delayed(Duration(seconds: 3), () {
-      Navigator.of(context).pop();
-    });
-      }
-    } else {
-      print('Gagal mendapatkan access token dari Google Sign-In');
-      showErrorMessage(context, 'Gagal mendapatkan access token dari Google');
-      Future.delayed(Duration(seconds: 3), () {
-      Navigator.of(context).pop();
-    });
-    }
-  } catch (error) {
-    print('Kesalahan selama registrasi dengan Google: $error');
-    showErrorMessage(
-        context, 'Terjadi kesalahan selama registrasi dengan Google');
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.of(context).pop();
-    });
-  }
-}
 
+        if (apiResponse != null) {
+          // Proses berhasil
+          print('Data berhasil disimpan ke API');
+          showSuccessMessage(context, 'Registrasi dengan Google berhasil');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfileGoogle(googleUser: user),
+            ),
+          );
+        } else {
+          // Proses gagal
+          print('Register gagal menyimpan data ke API');
+          showErrorMessage(context, 'Gagal menyimpan data ke API');
+          Future.delayed(Duration(seconds: 3), () {
+            Navigator.of(context).pop();
+          });
+        }
+      } else {
+        print('Gagal mendapatkan access token dari Google Sign-In');
+        showErrorMessage(context, 'Gagal mendapatkan access token dari Google');
+        Future.delayed(Duration(seconds: 3), () {
+          Navigator.of(context).pop();
+        });
+      }
+    } catch (error) {
+      print('Kesalahan selama registrasi dengan Google: $error');
+      showErrorMessage(
+          context, 'Terjadi kesalahan selama registrasi dengan Google');
+      Future.delayed(Duration(seconds: 3), () {
+        Navigator.of(context).pop();
+      });
+    }
+  }
 
   void _registerUser(
       BuildContext context, String name, String email, String password) async {
